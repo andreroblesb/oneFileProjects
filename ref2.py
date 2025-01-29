@@ -1,4 +1,4 @@
-# different approach
+# second approach
 
 def parse_matrix(matrix):
     matrix = matrix[1:-1]
@@ -15,6 +15,40 @@ def parse_matrix(matrix):
             formatted_matrix[count].append(int(x))
     return formatted_matrix
 
+def get_non_zero_diagonals(matrix):
+    n = len(matrix)
+    used_rows = set()
+
+    for i in range(n):
+        found = False
+        for j in range(n):
+            if j not in used_rows and matrix[j][i] != 0:
+                if i != j:
+                    # Swap rows to bring a non-zero element to the diagonal
+                    matrix[i], matrix[j] = matrix[j], matrix[i]
+                used_rows.add(j)
+                found = True
+                break
+        
+        if not found:
+            raise ValueError(f"No non-zero element found for column {i}. Cannot ensure non-zero diagonal.")
+    
+    return matrix, True
+
+    
+def clean_zero_columns(matrix):
+    n = len(matrix[0])
+    col = 0
+
+    while col < n:
+        if all(row[col] == 0 for row in matrix):
+            for row in matrix:
+                row.pop(col)
+            n -= 1
+        else:
+            col += 1
+    return matrix
+
 def ref(matrix):
     matrixSet = set()
     for row in matrix:
@@ -24,20 +58,15 @@ def ref(matrix):
         return matrix
     
     n, m = len(matrix[0]), len(matrix)
-    startpoint = 0
-    for i in range(n):
-        if any(row[i] != 0 for row in matrix):
-            startpoint = i
-            break
-        # delete row
-        for i in range(len(matrix)):
-            matrix[i].pop(0)
-
     n_pivots = min(n, m)
+    matrix = clean_zero_columns(matrix)
+    matrix, swapability = get_non_zero_diagonals(matrix)
+    
+    if swapability is False:
+        raise ValueError("Cannot make a non-zero diagonal")
+
     for pivot in range(n_pivots):
-        if pivot < startpoint:
-            continue
-        elif pivot == startpoint:   
+        if pivot == 0:   
             matrix = make_pivot(matrix)
         else:
             submatrix = get_submatrix(matrix, pivot)
@@ -56,20 +85,26 @@ def insert_submatrix(matrix, submatrix):
     return matrix
 
 def make_pivot(matrix):
-    print(matrix)
-    for index, row in enumerate(matrix, start=0):
+    print("Before pivoting:", matrix)
+    
+    # Base case: If matrix has 1 row and the pivot is zero, return as-is
+    if len(matrix) == 1 and matrix[0][0] == 0:
+        return matrix
+    
+    for index, row in enumerate(matrix):
         if index == 0:
-            # make first element 1
-            newRow = [x/row[0] for x in row]
-            matrix[index] = newRow
+            if row[0] == 0:
+                raise ValueError("Pivot element is zero. Cannot proceed with pivoting.")
+            matrix[index] = [x / row[0] for x in row]
         else:
-            # make first element 0
-            for_subtract = row[0]
-            substracting_row = [x*for_subtract for x in matrix[0]]
-            newRow = [x-y for x, y, in zip(substracting_row, row)]
-            matrix[index] = newRow
-    print(matrix)
+            factor = row[0]
+            if factor != 0:
+                subtracted_row = [x * factor for x in matrix[0]]
+                matrix[index] = [y - x for x, y in zip(subtracted_row, row)]
+    print("After pivoting:", matrix)
     return matrix
+
+
         
 def get_submatrix(matrix, level):
     # Create a new submatrix instead of modifying the original
@@ -91,11 +126,8 @@ def print_format(matrix):
     return 
 
 def main():
-    # p.d actually better to store groups as columns because of check need to go through all, but operations only need one loop
-        # matrix = str(input("Enter the matrix like [1 2 3 ; 4 5 6 ; 7 8 9] (considering it is already the augmented matrix): "))
-    # matrix = "[1 2 3 ; 4 5 6 ; 7 8 9]"
-    matrix = "[3 3 3 ; 7 5 6 ; 10 8 9]"
-    # matrix = "[0 0 0 ; 0 0 0]"
+    matrix = str(input("Enter the matrix like [1 2 3 ; 4 5 6 ; 7 8 9] (considering it is already the augmented matrix): "))
+    # matrix = "[1 1 1 ; 7 5 6 ; 10 8 9]" # for test
     matrix : list[list[int]] = parse_matrix(matrix)
     matrix = ref(matrix)
     print_format(matrix)

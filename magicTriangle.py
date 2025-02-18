@@ -3,62 +3,103 @@ magic triangle problem. We have the triangle below and must fill the nodes with 
 
 We will use the two most popular uninformed search algorithm (BFS & DFS).
 
+We are assuming:
+- We can go back from node to node
+- We can reasign the number of a node
+- Numbers are put in ascending order
+- ALL NODES ARE CONNECTED (implicitly)
+
 """
-# problem graph is:
+# problem graph given is:
 r'''
       A
-     / \
-    /   \
-   B     C
-  /       \
- /         \
+     /|\
+    / | \
+   B _|_ C
+  / \ | / \
+ /   \|/   \
 D-----E-----F
 '''
-# is it overengineered? yes, do we care? no, if it's for the sake of learning
+# is it overengineered? yes, because the understanding of the assignment changed during the development of the solution. Graph does not apply in the traditional sense.
 
 # BFS search entity
 class BFS():
     def __init__(self, start, graph):
-        self.numbers : list[int] = [x for x in range(7, 1)]
-        self.visited : set[Node] = ()
-        self.state : Node = start
+        self.numbers : list[int] = [x for x in range(1, 7)]
+        self.stack : list[str] = []
         self.graph : Graph = graph
+        self.done : bool = False
+        self.current : str = None
     
-    def state_proof(self):
-        # proof if we are done
-        if sum(self.graph.nodes["A"].value and self.graph.nodes["D"].value and self.graph.nodes["F"].value) == 10:
-            print("done")
-            
-
-class Node():
-    def __init__(self, name, edge):
-        self.value : int = None
-        self.name : str = name
-        self.connections : list[Node] = []
-        self.edge : bool = edge
-
-class Graph():
-    """
-    create an adjacency matrix
-    """
-    
-    def __init__(self, **kwargs : Node):
-        self.nodes : dict[str, Node] = kwargs
-        self.edges : list[tuple[str]] = []
-    
-    def edge(self, edge):
-        self.edges.append(edge)
-        return
+    def solve(self):
         
 
+class DFS():
+    def __init__(self, graph):
+        self.numbers : list[int] = [x for x in range(1, 7)]
+        self.stack : list[str] = []
+        self.graph : Graph = graph
+        self.done : bool = False
+        self.current : str = None
+    
+    # use FIFO principle (stack)
+    
+    def solve(self):
+        print("Initiating DFS search")
+        # add moves to stack
+        options : list = self.graph.return_unassigned()
+        for node in options:
+            self.stack.append(node)
+        while not self.done:
+            # check if done
+            if len(self.numbers) == 0:
+                if self.graph.constraint_proof():
+                    self.done = True
+                    print("Done!")
+                    continue
+                else:
+                    print("Configuration does not pass constraint.")
+                    self.numbers.append(self.graph.nodes[self.current])
+                    self.graph.nodes[self.current] = 0
+            
+            # assign last-in
+            number = self.numbers.pop()
+            self.current = self.stack.pop()
+            self.graph.nodes[self.current] = number
+            print(f"Assigned {number} to {self.current}")
+            
+            # add moves to stack
+            options : list = self.graph.return_unassigned()
+            for node in options:
+                self.stack.append(node)
+
+class Graph():
+    def __init__(self, **kwargs : int):
+        self.nodes : dict[str, int] = kwargs
+    
+    def constraint_proof(self):
+        # proof if we are done
+        if sum([self.nodes["A"], self.nodes["D"], self.nodes["F"]]) == 10:
+            return True
+        else: return False
+    
+    def return_unassigned(self):
+        assigned = []
+        for node, value in self.nodes.items():
+            if value == 0:
+                assigned.append(node)
+        return assigned
+
+    def __str__(self):
+        printing = ""
+        for node, value in self.nodes.items():
+            printing += f"{node} : {value} \n"
+        return printing
+
 # setting the problem graph
-start = Node("A", True)
-graph = Graph(A=start, B=Node("B", False), C=Node("C", False), D=Node("D", True), E=Node("E", False), F=Node("F", True))
-graph.edge(("A", "B"))
-graph.edge(("B", "D"))
-graph.edge(("D", "E"))
-graph.edge(("E", "F"))
-graph.edge(("F", "C"))
-graph.edge(("C", "A"))
+graph = Graph(A=0, B=0, C=0, D=0, E=0, F=0)
 
 # perform BFS
+search_entity = DFS(graph)
+search_entity.solve()
+print(graph)

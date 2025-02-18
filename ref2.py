@@ -1,4 +1,4 @@
-# second approach
+# second approach, could be improved
 
 def parse_matrix(matrix):
     matrix = matrix[1:-1]

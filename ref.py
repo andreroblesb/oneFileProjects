@@ -1,4 +1,5 @@
 # provide a matrix and get a rref matrix
+# outdated: see "ref2"
 from fractions import Fraction
 
 def parse_matrix(matrix):

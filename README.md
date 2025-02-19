@@ -4,11 +4,13 @@ A set of one file projects I will work randomly, without a specific goal, just f
 
 **The purpose is to train myself, so any sort of copilot or assistance is prohibited by me, and my willingness to learn! Documentation from imports is valid, although for this repo I'll try avoiding dependencies as much as posible.**
 
-## projects you'll find
+## Projects you'll find (Along with language they are explained in)
 
-- REF matrix algorithm
+- REF matrix algorithm. (English)
+- Search algorithm to resolve the "6 magic numbers triangle" problem. (English)
+- Search algorithm to resolve "3 water cup" problem. (Spanish)
 
-## upcoming additions
+## Ppcoming additions
 
 - Simplex algorithm (from linear programming).
-- Search algorithm to resolve the "6 magic numbers triangle" problem.
+

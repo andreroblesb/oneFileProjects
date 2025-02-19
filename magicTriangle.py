@@ -82,7 +82,7 @@ class DFS():
         self.done : bool = False
         self.current : str = None
     
-    # use FIFO principle (stack)
+    # use LIFO principle (stack)
     
     def solve(self):
         print("Initiating DFS search")

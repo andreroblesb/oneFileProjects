@@ -14,4 +14,6 @@ A set of one file projects I will work randomly, without a specific goal, just f
 ## Ppcoming additions
 
 - Simplex algorithm (from linear programming).
+- Improve ref algorithm
+- One timePad encoding
 

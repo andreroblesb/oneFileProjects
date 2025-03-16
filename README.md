@@ -10,10 +10,11 @@ A set of one file projects I will work randomly, without a specific goal, just f
 - Search algorithm to resolve the "6 magic numbers triangle" problem. (English)
 - Search algorithm to resolve "3 water cup" problem. (Spanish)
 - Search algorithm to resolve "eight Queen" problem. (English)
+- One TimePad encoding
+- Mars robot exploration using local search algorithms. (Mars folder).
 
 ## Ppcoming additions
 
 - Simplex algorithm (from linear programming).
 - Improve ref algorithm
-- One timePad encoding
 
